@@ -1,0 +1,60 @@
+[package]
+name = "webserver"
+version = "0.1.0"
+edition = "2021"
+authors = ["myOmikron <git@omikron.dev>"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# webframework
+axum = { version = "~0.7" }
+# abstractions for requests
+tower = { version = "~0.4", features = ["full"] }
+# common middlewares
+tower-http = { version = "~0.5", features = ["trace"] }
+# Session middleware
+tower-sessions = { version = "~0.12" }
+tower-sessions-rorm-store = { version = "~0.2" }
+# oidc
+openidconnect = { version = "~3", features = ["accept-rfc3339-timestamps"] }
+
+# openapi and swagger ui
+swaggapi = { version = "*", features = ["axum"], git = "https://github.com/gammelalf/swaggapi" }
+schemars = { version = "~0.8", features = ["uuid1"] }
+
+# Cli
+clap = { version = "~4", features = ["derive"] }
+# Reading passwords from stdin
+rpassword = { version = "~7" }
+# password hashing
+argon2 = { version = "~0.5", features = ["std"] }
+
+# Serialization libraries
+serde = { version = "~1", features = ["derive"] }
+serde_repr = { version = "~0.1" }
+serde_json = { version = "~1" }
+toml = { version = "~0.8" }
+uuid = { version = "~1", features = ["v4", "serde"] }
+# Time library
+time = { version = "~0.3", features = ["serde-well-known"] }
+
+# Errors
+thiserror = { version = "~1" }
+
+# Logging
+tracing = { version = "~0.1" }
+tracing-subscriber = { version = "~0.3", features = ["tracing-log"] }
+
+# ORM
+rorm = { version = "~0.6", default-features = false, features = ["tokio", "postgres-only", "cli", "uuid"] }
+
+# Async runtime
+tokio = { version = ">=1.23.1", features = ["macros", "rt-multi-thread", "sync"] }
+# Signal hook for tokio
+signal-hook = { version = "~0.3" }
+signal-hook-tokio = { version = "~0.3", features = ["futures-v0_3"] }
+futures = { version = "~0.3" }
+
+[features]
+rorm-main = []
