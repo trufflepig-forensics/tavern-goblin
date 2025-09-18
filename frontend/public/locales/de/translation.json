@@ -1,0 +1,18 @@
+{
+    "accessibility": {
+        "progress": "Fortschritt"
+    },
+    "button": {
+        "logout": "Abmelden",
+        "save": "Sichern"
+    },
+    "label": {
+        "english": "Englisch",
+        "german": "Deutsch",
+        "next": "Weiter",
+        "prev": "Zur\u00fcck"
+    },
+    "toast": {
+        "unsaved-changes": "Es gibt ungespeicherte \u00c4nderungen! Fortfahren?"
+    }
+}

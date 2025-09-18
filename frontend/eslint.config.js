@@ -10,7 +10,7 @@ const config = tsEslint.config(
     ...tsEslint.configs.recommended,
     jsdoc.configs["flat/recommended-typescript"],
     {
-        ignores: ["src/api/generated/**", "eslint.config.js", "src/index.css"],
+        ignores: ["src/api/generated/**", "src/components/base/**", "eslint.config.js", "src/index.css"],
     },
     {
         languageOptions: {
@@ -18,7 +18,6 @@ const config = tsEslint.config(
             parserOptions: { project: ["./tsconfig.json"] },
         },
         rules: {
-            "no-console": "warn",
             "no-alert": "warn",
 
             "no-case-declarations": "off", // potential errors are already caught by typescript
@@ -41,7 +40,12 @@ const config = tsEslint.config(
                         MethodDefinition: true,
                     },
                     // use https://typescript-eslint.io/play/ to figure out the ast layout
-                    contexts: ["TSTypeAliasDeclaration", "TSPropertySignature"],
+                    contexts: [
+                        "TSTypeAliasDeclaration",
+                        "TSInterfaceDeclaration",
+                        "TSPropertySignature",
+                        "TSMethodSignature",
+                    ],
                 },
             ],
 
@@ -53,6 +57,7 @@ const config = tsEslint.config(
                         "ArrowFunctionExpression",
                         'FunctionDeclaration:not(:has(Identifier.params[name="props"]:first-child:last-child))', // ignore react components
                         "FunctionExpression",
+                        "TSMethodSignature",
                     ],
                 },
             ],
@@ -65,16 +70,14 @@ const config = tsEslint.config(
                         "ArrowFunctionExpression",
                         'FunctionDeclaration:not(:has(Identifier.params[name="props"]:first-child:last-child))', // ignore react components
                         "FunctionExpression",
+                        "TSMethodSignature",
                     ],
                 },
             ],
 
             "@typescript-eslint/switch-exhaustiveness-check": "error",
 
-            "@typescript-eslint/ban-ts-comment": [
-                "error",
-                { "ts-ignore": "allow-with-description" },
-            ],
+            "@typescript-eslint/ban-ts-comment": ["error", { "ts-ignore": "allow-with-description" }],
 
             "@typescript-eslint/ban-types": [
                 "error",
