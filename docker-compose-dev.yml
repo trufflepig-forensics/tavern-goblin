@@ -54,31 +54,6 @@ services:
     build:
       dockerfile: ./build/dockerfiles/nginx-dev.Dockerfile
 
-#  certbot-dev:
-#    restart: unless-stopped
-#    stop_signal: SIGKILL
-#    depends_on: [ nginx-dev, tailscale-dev ]
-#    network_mode: service:tailscale-dev
-#    volumes:
-#      - letsencrypt-vol:/etc/letsencrypt
-#      - certbot-vol:/var/www/certbot
-#    env_file: [ .env ]
-#    tty: true
-#    build:
-#      dockerfile: ./build/dockerfiles/certbot-dev.Dockerfile
-#
-#  tailscale-dev:
-#    restart: unless-stopped
-#    networks: [ net-tavern-goblin ]
-#    volumes:
-#      - tailscale-vol:/var/lib/tailscale
-#    env_file: [ .env ]
-#    environment:
-#      - TS_STATE_DIR=/var/lib/tailscale
-#      - TS_ACCEPT_DNS=true
-#    build:
-#      dockerfile: ./build/dockerfiles/tailscale-dev.Dockerfile
-
 networks:
   net-tavern-goblin:
     driver: bridge
@@ -86,7 +61,4 @@ networks:
 volumes:
   postgres-vol:
     name: ${COMPOSE_PROJECT_NAME}-postgres-vol-${DEV_TAG}
-  tailscale-vol:
   tavern-goblin-vol:
-  letsencrypt-vol:
-  certbot-vol:

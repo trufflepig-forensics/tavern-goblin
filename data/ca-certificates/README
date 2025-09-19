@@ -1,0 +1,3 @@
+# Add your certificates in this directory
+#
+# They must end in .crt and must be in pem format

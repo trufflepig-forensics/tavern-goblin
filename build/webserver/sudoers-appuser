@@ -1,0 +1,1 @@
+appuser ALL=(ALL) NOPASSWD: /usr/sbin/update-ca-certificates
