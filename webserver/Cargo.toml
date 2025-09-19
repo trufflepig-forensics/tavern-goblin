@@ -33,7 +33,7 @@ tracing-subscriber = { version = "~0.3", features = ["env-filter", "json"] }
 tracing-forest = { version = "~0.2", features = ["ansi", "tokio", "smallvec", "chrono"] }
 
 # Web framework
-galvyn = { git = "https://github.com/myOmikron/galvyn.git" , rev = "5a18a610c1fbf4c5227f9b8801cdaf1fb7d009b8" }
+galvyn = { git = "https://github.com/myOmikron/galvyn.git", rev = "5a18a610c1fbf4c5227f9b8801cdaf1fb7d009b8" }
 tower-http = { version = "~0.6", features = ["trace"] }
 
 # Account authentication

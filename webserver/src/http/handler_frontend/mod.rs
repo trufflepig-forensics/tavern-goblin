@@ -2,10 +2,14 @@
 //!
 //! This included the router as well as the handlers and schemas
 
-use crate::http::middlewares::auth_required::AuthRequiredLayer;
 use galvyn::core::GalvynRouter;
 use galvyn::openapi::OpenapiRouterExt;
 
+use crate::http::middlewares::auth_required::AuthRequiredLayer;
+
+pub mod oidc;
+
+/// Initialize the routes of the frontend
 pub fn initialize_routes() -> GalvynRouter {
     let without_auth = GalvynRouter::new().nest(
         "/oidc",
