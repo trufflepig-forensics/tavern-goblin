@@ -7,7 +7,10 @@ import {
     SidebarBody,
     SidebarFooter,
     SidebarHeader,
+    SidebarHeading,
     SidebarItem,
+    SidebarLabel,
+    SidebarSection,
 } from "src/components/base/sidebar";
 import { SidebarLayout } from "src/components/base/sidebar-layout";
 import { Navbar } from "src/components/base/navbar";
@@ -15,6 +18,8 @@ import LogoText from "src/assets/logo_text.svg?react";
 import {
     ArrowRightStartOnRectangleIcon,
     ChevronUpIcon,
+    CurrencyEuroIcon,
+    ReceiptRefundIcon,
     UserIcon,
 } from "@heroicons/react/20/solid";
 import { Dropdown, DropdownButton, DropdownItem, DropdownLabel, DropdownMenu } from "src/components/base/dropdown";
@@ -42,7 +47,22 @@ export default function Menu(props: MenuProps) {
                             className={"h-20 fill-[#233F94] p-3 drop-shadow-lg dark:fill-white  dark:drop-shadow-none"}
                         />
                     </SidebarHeader>
-                    <SidebarBody></SidebarBody>
+                    <SidebarBody>
+                        <SidebarSection>
+                            <SidebarHeading>{t("heading.dinner")}</SidebarHeading>
+                            <SidebarItem href={"/dinner"}>
+                                <ReceiptRefundIcon />
+                                <SidebarLabel>{t("label.overview")}</SidebarLabel>
+                            </SidebarItem>
+                        </SidebarSection>
+                        <SidebarSection>
+                            <SidebarHeading>{t("heading.personal")}</SidebarHeading>
+                            <SidebarItem>
+                                <CurrencyEuroIcon />
+                                <SidebarLabel>{t("label.balance")}</SidebarLabel>
+                            </SidebarItem>
+                        </SidebarSection>
+                    </SidebarBody>
                     <SidebarFooter className={"max-lg:hidden"}>
                         <Dropdown>
                             <DropdownButton as={SidebarItem}>

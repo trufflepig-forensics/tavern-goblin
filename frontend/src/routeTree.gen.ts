@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as MenuRouteImport } from './routes/_menu'
 import { Route as MenuIndexRouteImport } from './routes/_menu/index'
 import { Route as MenuProfileIndexRouteImport } from './routes/_menu/profile/index'
+import { Route as MenuDinnerIndexRouteImport } from './routes/_menu/dinner/index'
 
 const MenuRoute = MenuRouteImport.update({
   id: '/_menu',
@@ -27,27 +28,35 @@ const MenuProfileIndexRoute = MenuProfileIndexRouteImport.update({
   path: '/profile/',
   getParentRoute: () => MenuRoute,
 } as any)
+const MenuDinnerIndexRoute = MenuDinnerIndexRouteImport.update({
+  id: '/dinner/',
+  path: '/dinner/',
+  getParentRoute: () => MenuRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof MenuIndexRoute
+  '/dinner': typeof MenuDinnerIndexRoute
   '/profile': typeof MenuProfileIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof MenuIndexRoute
+  '/dinner': typeof MenuDinnerIndexRoute
   '/profile': typeof MenuProfileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_menu': typeof MenuRouteWithChildren
   '/_menu/': typeof MenuIndexRoute
+  '/_menu/dinner/': typeof MenuDinnerIndexRoute
   '/_menu/profile/': typeof MenuProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/profile'
+  fullPaths: '/' | '/dinner' | '/profile'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/profile'
-  id: '__root__' | '/_menu' | '/_menu/' | '/_menu/profile/'
+  to: '/' | '/dinner' | '/profile'
+  id: '__root__' | '/_menu' | '/_menu/' | '/_menu/dinner/' | '/_menu/profile/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,16 +86,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MenuProfileIndexRouteImport
       parentRoute: typeof MenuRoute
     }
+    '/_menu/dinner/': {
+      id: '/_menu/dinner/'
+      path: '/dinner'
+      fullPath: '/dinner'
+      preLoaderRoute: typeof MenuDinnerIndexRouteImport
+      parentRoute: typeof MenuRoute
+    }
   }
 }
 
 interface MenuRouteChildren {
   MenuIndexRoute: typeof MenuIndexRoute
+  MenuDinnerIndexRoute: typeof MenuDinnerIndexRoute
   MenuProfileIndexRoute: typeof MenuProfileIndexRoute
 }
 
 const MenuRouteChildren: MenuRouteChildren = {
   MenuIndexRoute: MenuIndexRoute,
+  MenuDinnerIndexRoute: MenuDinnerIndexRoute,
   MenuProfileIndexRoute: MenuProfileIndexRoute,
 }
 

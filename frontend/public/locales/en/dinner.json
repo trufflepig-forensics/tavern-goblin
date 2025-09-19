@@ -1,0 +1,11 @@
+{
+    "button": {
+        "plus-one": "+1"
+    },
+    "description": {
+        "cooked-by": "Cooked by: {{object}}"
+    },
+    "heading": {
+        "dinner-overview": "Dinner Overview"
+    }
+}

@@ -2,5 +2,13 @@
     "button": {
         "profile": "Profile",
         "sign-out": "Sign out"
+    },
+    "heading": {
+        "dinner": "heading.dinner",
+        "personal": "heading.personal"
+    },
+    "label": {
+        "balance": "label.balance",
+        "overview": "label.overview"
     }
 }

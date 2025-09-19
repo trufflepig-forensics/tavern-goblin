@@ -1,0 +1,11 @@
+{
+    "button": {
+        "plus-one": "+1"
+    },
+    "description": {
+        "cooked-by": "description.cooked-by"
+    },
+    "heading": {
+        "receipt-overview": "heading.receipt-overview"
+    }
+}
