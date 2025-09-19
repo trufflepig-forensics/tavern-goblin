@@ -1,60 +1,41 @@
 [package]
 name = "webserver"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 authors = ["myOmikron <git@omikron.dev>"]
+publish = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-# webframework
-axum = { version = "~0.7" }
-# abstractions for requests
-tower = { version = "~0.4", features = ["full"] }
-# common middlewares
-tower-http = { version = "~0.5", features = ["trace"] }
-# Session middleware
-tower-sessions = { version = "~0.12" }
-tower-sessions-rorm-store = { version = "~0.2" }
-# oidc
-openidconnect = { version = "~3", features = ["accept-rfc3339-timestamps"] }
 
-# openapi and swagger ui
-swaggapi = { version = "*", features = ["axum"], git = "https://github.com/gammelalf/swaggapi" }
-schemars = { version = "~0.8", features = ["uuid1"] }
+# Async
+tokio = { version = ">=1.23.1", features = ["full"] }
+futures-util = { version = "~0.3" }
 
-# Cli
+# CLI
 clap = { version = "~4", features = ["derive"] }
-# Reading passwords from stdin
-rpassword = { version = "~7" }
-# password hashing
-argon2 = { version = "~0.5", features = ["std"] }
 
-# Serialization libraries
+# Datatypes
+url = { version = "~2", features = ["serde"] }
+time = { version = "~0.3" }
+
+# Error handling
+anyhow = { version = "~1" }
+
+# Serialization
 serde = { version = "~1", features = ["derive"] }
-serde_repr = { version = "~0.1" }
 serde_json = { version = "~1" }
-toml = { version = "~0.8" }
-uuid = { version = "~1", features = ["v4", "serde"] }
-# Time library
-time = { version = "~0.3", features = ["serde-well-known"] }
 
-# Errors
-thiserror = { version = "~1" }
-
-# Logging
+# Tracing
 tracing = { version = "~0.1" }
-tracing-subscriber = { version = "~0.3", features = ["tracing-log"] }
+tracing-subscriber = { version = "~0.3", features = ["env-filter", "json"] }
+tracing-forest = { version = "~0.2", features = ["ansi", "tokio", "smallvec", "chrono"] }
 
-# ORM
-rorm = { version = "~0.6", default-features = false, features = ["tokio", "postgres-only", "cli", "uuid"] }
+# Web framework
+galvyn = { git = "https://github.com/myOmikron/galvyn.git" , rev = "5a18a610c1fbf4c5227f9b8801cdaf1fb7d009b8" }
+tower-http = { version = "~0.6", features = ["trace"] }
 
-# Async runtime
-tokio = { version = ">=1.23.1", features = ["macros", "rt-multi-thread", "sync"] }
-# Signal hook for tokio
-signal-hook = { version = "~0.3" }
-signal-hook-tokio = { version = "~0.3", features = ["futures-v0_3"] }
-futures = { version = "~0.3" }
-
-[features]
-rorm-main = []
+# Account authentication
+openidconnect = { version = "~4", features = ["accept-rfc3339-timestamps", "timing-resistant-secret-traits"] }
+uuid = { version = "~1", features = ["v4"] }

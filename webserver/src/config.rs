@@ -1,109 +1,62 @@
 //! Definitions of the configuration file
 
-use std::fs;
-use std::io;
-use std::path::Path;
+use galvyn::core::stuff::env::{EnvError, EnvVar};
+use galvyn::rorm::DatabaseDriver;
+use std::net::{IpAddr, Ipv4Addr};
+use std::sync::LazyLock;
 
-use openidconnect::ClientId;
-use openidconnect::ClientSecret;
-use openidconnect::IssuerUrl;
-use openidconnect::RedirectUrl;
-use rorm::DatabaseDriver;
-use serde::Deserialize;
-use serde::Serialize;
-use thiserror::Error;
-
-/// Server related configuration.
-#[derive(Deserialize, Serialize, Debug, Clone)]
-#[serde(rename_all = "PascalCase")]
-pub struct ServerConfig {
-    /// Address the API server should bind to
-    pub listen_address: String,
-    /// Port the API server should bind to
-    pub listen_port: u16,
-}
-
-/// Database related configuration.
+/// Load all environment variables declared in this module
 ///
-/// As the only supported database is postgres, no driver configuration is needed
-#[derive(Deserialize, Serialize, Debug, Clone)]
-#[serde(rename_all = "PascalCase")]
-pub struct DBConfig {
-    /// The address of the database server
-    pub host: String,
-    /// The port of the database server
-    pub port: u16,
-    /// The database name
-    pub name: String,
-    /// The user to use for the database connection
-    pub user: String,
-    /// Password for the user
-    pub password: String,
-}
+/// Called at the beginning of `main` to gather and report all env errors at once.
+pub fn load_env() -> Result<(), Vec<&'static EnvError>> {
+    let mut errors = Vec::new();
 
-impl From<DBConfig> for DatabaseDriver {
-    fn from(value: DBConfig) -> Self {
-        DatabaseDriver::Postgres {
-            name: value.name,
-            host: value.host,
-            port: value.port,
-            user: value.user,
-            password: value.password,
-        }
+    for result in [
+        LISTEN_ADDRESS.load(),
+        LISTEN_PORT.load(),
+        POSTGRES_HOST.load(),
+        POSTGRES_DB.load(),
+        POSTGRES_PORT.load(),
+        POSTGRES_USER.load(),
+        POSTGRES_PASSWORD.load(),
+    ] {
+        errors.extend(result.err());
+    }
+
+    if errors.is_empty() {
+        Ok(())
+    } else {
+        Err(errors)
     }
 }
 
-/// OIDC related configuration
-#[derive(Debug, Clone, Deserialize, Serialize)]
-#[serde(rename_all = "PascalCase")]
-pub struct OpenIdConnect {
-    /// The client id of the server
-    pub client_id: ClientId,
-    /// The corresponding client secret
-    pub client_secret: ClientSecret,
-    /// The url the IDM server should rediert to the user to
-    pub redirect_url: RedirectUrl,
-    /// The discover url
-    pub discover_url: IssuerUrl,
-}
+/// Address the API server should bind to
+pub static LISTEN_ADDRESS: EnvVar<IpAddr> =
+    EnvVar::optional("LISTEN_ADDRESS", || IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)));
 
-/// Definition of the main configuration.
-///
-/// This model can be parsed from the config.toml
-#[derive(Deserialize, Serialize, Debug, Clone)]
-#[serde(rename_all = "PascalCase")]
-pub struct Config {
-    /// Server configuration
-    pub server: ServerConfig,
-    /// Database configuration
-    pub database: DBConfig,
-    /// The config for oidc
-    pub openid_connect: OpenIdConnect,
-}
+/// Port the API server should bind to
+pub static LISTEN_PORT: EnvVar<u16> = EnvVar::optional("LISTEN_PORT", || 8080);
 
-/// All errors that can occur when parsing a configuration file
-#[derive(Debug, Error)]
-#[allow(missing_docs)]
-pub enum ConfigError {
-    #[error("{0}")]
-    Io(#[from] io::Error),
-    #[error("The config file is missing")]
-    MissingFile,
-    #[error("Parsing of config file failed: {0}")]
-    ParsingFailed(#[from] toml::de::Error),
-}
+/// The address of the database server
+pub static POSTGRES_HOST: EnvVar = EnvVar::optional("POSTGRES_HOST", || "postgres".to_string());
 
-impl Config {
-    /// Read and parse a [Config] from a path
-    pub fn try_from_path(path: &str) -> Result<Self, ConfigError> {
-        let p = Path::new(path);
-        if !p.exists() {
-            return Err(ConfigError::MissingFile);
-        }
+/// The database name
+pub static POSTGRES_DB: EnvVar = EnvVar::required("POSTGRES_DB");
 
-        let c_str = fs::read_to_string(p)?;
-        let config = toml::from_str(&c_str)?;
+/// The port of the database server
+pub static POSTGRES_PORT: EnvVar<u16> = EnvVar::optional("POSTGRES_PORT", || 5432);
 
-        Ok(config)
-    }
-}
+/// The user to use for the database connection
+pub static POSTGRES_USER: EnvVar = EnvVar::optional("POSTGRES_USER", || "postgres".to_string());
+
+/// Password for the user
+pub static POSTGRES_PASSWORD: EnvVar = EnvVar::optional("POSTGRES_PASSWORD", || "".to_string());
+
+/// Bundle of all database variables combined in `rorm`'s format
+pub static DB: LazyLock<DatabaseDriver> = LazyLock::new(|| DatabaseDriver::Postgres {
+    name: POSTGRES_DB.clone(),
+    host: POSTGRES_HOST.clone(),
+    port: *POSTGRES_PORT,
+    user: POSTGRES_USER.clone(),
+    password: POSTGRES_PASSWORD.clone(),
+});

@@ -1,1 +1,1 @@
-# tavern-goblin
+# Tavern Goblin

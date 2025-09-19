@@ -1,4 +1,6 @@
-target/
 .idea/
+target/
+.models.json
+node_modules/
+config.toml
 galvyn.env
-docs/swagger.json

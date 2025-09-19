@@ -1,22 +1,25 @@
-//! Authentication required middleware
+//! Middleware which requires the user to be authenticated.
 
-use axum::extract::Request;
-use axum::middleware::Next;
-use axum::response::Response;
-use tower_sessions::Session;
-use uuid::Uuid;
+use std::ops::ControlFlow;
 
-use crate::http::common::errors::ApiError;
-use crate::http::common::errors::ApiResult;
-use crate::http::SESSION_USER;
+use galvyn::core::middleware::SimpleGalvynMiddleware;
+use galvyn::core::re_exports::axum::extract::Request;
+use galvyn::core::re_exports::axum::response::IntoResponse;
+use galvyn::core::re_exports::axum::response::Response;
 
-/// Checks the session if the [SESSION_USER] is present which will be the indicator
-/// if the user is logged-in
-pub async fn auth_required(session: Session, req: Request, next: Next) -> ApiResult<Response> {
-    session
-        .get::<Uuid>(SESSION_USER)
-        .await?
-        .ok_or(ApiError::Unauthenticated)?;
+use crate::models::accounts::Account;
 
-    Ok(next.run(req).await)
+/// Middleware which requires the user to be authenticated.
+#[derive(Copy, Clone, Debug)]
+pub struct AuthRequiredLayer;
+
+impl SimpleGalvynMiddleware for AuthRequiredLayer {
+    async fn pre_handler(&mut self, req: Request) -> ControlFlow<Response, Request> {
+        todo!();
+        let (mut parts, body) = req.into_parts();
+        /*match Account::from_request_parts(&mut parts, &()).await {
+            Ok(_account) => ControlFlow::Continue(Request::from_parts(parts, body)),
+            Err(rejection) => ControlFlow::Break(rejection.into_response()),
+        }*/
+    }
 }
